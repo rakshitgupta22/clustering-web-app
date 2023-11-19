@@ -28,6 +28,7 @@ const validatePassword = (password) => {
 
 // Add event listener to the signup form
 signupForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
   const username = usernameInput.value;
   const email = emailInput.value;
   const password = passwordInput.value;
@@ -59,13 +60,9 @@ signupForm.addEventListener("submit", async (e) => {
     passwordError.innerHTML = "";
   }
 
-  // Prevent form submission if form is invalid
-  if (!formIsValid) {
-    e.preventDefault();
-  }
-
   // If form is valid, submit form and send data to beckend server
   if (formIsValid) {
+    console.log(username, email, password);
     try {
       const response = await fetch("http://localhost:3000/signup", {
         method: "POST",
