@@ -2,9 +2,9 @@
   "name": "cluster_web_app",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "signup_server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node signup_server.js"
   },
   "keywords": [],
   "author": "",

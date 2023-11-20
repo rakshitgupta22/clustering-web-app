@@ -1,5 +1,6 @@
 const express = require("express");
 const mysql = require("mysql2/promise");
+const path = require('path');
 
 const app = express();
 const port = 3000; // Set your desired port number
@@ -16,6 +17,19 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
+});
+
+// Serve the static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Define a route to handle requests at the root ("/") and serve the index.html file
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Define a route to serve the signup.html page
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'signup.html'));
 });
 
 // Route to handle signup POST request
