@@ -1,3 +1,5 @@
+"use strict";
+
 // Get all the elements from the signup form
 const signupForm = document.getElementById("signupForm");
 const usernameInput = document.getElementById("username");
@@ -6,6 +8,24 @@ const passwordInput = document.getElementById("password");
 const usernameError = document.getElementById("usernameError");
 const emailError = document.getElementById("emailError");
 const passwordError = document.getElementById("passwordError");
+const modal = document.querySelector(".modal");
+const closeModal = document.querySelector(".close-modal");
+const overlay = document.querySelector(".overlay");
+const errorWindow = document.querySelector(".error-window");
+
+const close = function () {
+  modal.classList.add("hidden");
+  overlay.classList.add("hidden");
+  errorWindow.innerHTML = "";
+};
+
+const open = function (errorMsg) {
+  modal.classList.remove("hidden");
+  overlay.classList.remove("hidden");
+  errorWindow.innerHTML = errorMsg;
+};
+
+closeModal.addEventListener("click", close);
 
 // functions to validate username, email and password
 const validateUsername = (username) => {
@@ -76,12 +96,16 @@ signupForm.addEventListener("submit", async (e) => {
         console.log("Signup successful");
         // Optionally, redirect the user to a success page or perform other actions
       } else {
-        throw new Error("Network response was not ok");
+        // throw new Error("Network response was not ok");
         // Handle signup failure (show error message, etc.)
+        // Get error message from response body and then throw error
+        const { message } = await response.json();
+        throw new Error(message);
       }
     } catch (error) {
       console.error("Error:", error);
-      // Handle network errors
+      // Show error message in the UI
+      open(error.message);
     }
   }
 });

@@ -16,10 +16,11 @@
       <h2>Login</h2>
       <form id="loginForm">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required /><br />
+        <input type="text" id="username" name="username" required />
 
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required />
+        <span id="loginError" class="error"></span>
 
         <button type="submit">Login</button>
       </form>
@@ -31,6 +32,6 @@
       <p>&copy; 2023 K-Means Clustering App</p>
     </footer>
 
-    <script src="js/login.js"></script>
+    <script type="module" src="js/login.js"></script>
   </body>
 </html>
