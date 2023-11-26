@@ -1,5 +1,23 @@
 "use strict";
 
+window.addEventListener("DOMContentLoaded", async () => {
+  const token = window.localStorage.getItem("token");
+  if (token) {
+    console.log(token)
+    const sessionResponse = await fetch(`/session/${token}`);
+    if (sessionResponse.ok) {
+        const { username } = await sessionResponse.json();
+        // document.getElementById("username").innerHTML = username;
+        window.location.href = "/dashboard";
+    } else {
+        console.log("Session expired");
+        window.location.href = "/";
+        window.localStorage.removeItem("token");
+    }
+    }
+})
+
+
 // Get all the elements from the signup form
 const signupForm = document.getElementById("signupForm");
 const usernameInput = document.getElementById("username");

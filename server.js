@@ -2,9 +2,15 @@ const express = require("express");
 const mysql = require("mysql2/promise");
 const path = require("path");
 const bcrypt = require("bcrypt");
+const {v4: uuidv4} = require("uuid");
 
 const app = express();
 const port = 3000; // Set your desired port number
+
+const TOKEN_EXPIRY = 30 * 1000; // 30 seconds
+// const TOKEN_EXPIRY = 60 * 60 * 1000; // 1 hour
+
+const sessions = {};
 
 // Middleware to parse incoming JSON data
 app.use(express.json());
@@ -90,26 +96,71 @@ app.post("/login", async (req, res) => {
   try {
     // Check if the username exists in the database
     // If not exists, handle accordingly
-    const [rows] = await pool.query("SELECT * FROM users WHERE username = ?", [
-      username,
-    ]);
+    // const [rows] = await pool.query("SELECT * FROM users WHERE username = ?", [
+    //   username,
+    // ]);
 
-    if (rows.length === 0) {
-      return res.status(401).json({ message: "Invalid username or password" });
-    }
+    // if (rows.length === 0) {
+    //   return res.status(401).json({ message: "Invalid username or password" });
+    // }
 
-    // If exists, compare the password
-    const hashedPassword = rows[0].password;
-    const passwordMatch = await bcrypt.compare(password, hashedPassword);
+    // // If exists, compare the password
+    // const hashedPassword = rows[0].password;
+    // const passwordMatch = await bcrypt.compare(password, hashedPassword);
 
-    if (!passwordMatch) {
-      return res.status(401).json({ message: "Invalid username or password" });
-    }
+    // if (!passwordMatch) {
+    //   return res.status(401).json({ message: "Invalid username or password" });
+    // }
+    
+    // create a new session
+    const token = uuidv4();
+    const expiry = Date.now() + TOKEN_EXPIRY;
+    
+    sessions[token] = { username, expiry };
 
+    console.log(sessions);
+    res.set('Authorization', token);
     res.status(200).json({ message: "Login successful" });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ message: "Login failed" });
+  }
+});
+
+// Route to handle logout POST request
+app.post("/logout", async (req, res) => {
+  console.log(req.body);
+  const { token } = req.body;
+
+  try {
+    delete sessions[token];
+    console.log(sessions);
+    res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Logout failed" });
+  }
+});
+
+app.get("/session/:id", async (req, res) => {
+  const { id: token } = req.params;
+
+  try {
+    const session = sessions[token];
+    if (!session) {
+      return res.status(401).json({ message: "Session expired" });
+    }
+
+    const { username, expiry } = session;
+    if (Date.now() > expiry) {
+      delete sessions[token];
+      return res.status(401).json({ message: "Session expired" });
+    }
+    sessions[token].expiry = Date.now() + TOKEN_EXPIRY;
+    res.status(200).json({ username });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Session failed" });
   }
 });
 
