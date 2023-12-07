@@ -3,20 +3,18 @@
 window.addEventListener("DOMContentLoaded", async () => {
   const token = window.localStorage.getItem("token");
   if (token) {
-    console.log(token)
     const sessionResponse = await fetch(`/session/${token}`);
     if (sessionResponse.ok) {
-        const { username } = await sessionResponse.json();
-        // document.getElementById("username").innerHTML = username;
-        window.location.href = "/dashboard";
+      const { username } = await sessionResponse.json();
+      // document.getElementById("username").innerHTML = username;
+      window.location.href = "/dashboard";
     } else {
-        console.log("Session expired");
-        window.location.href = "/";
-        window.localStorage.removeItem("token");
+      console.log("Session expired");
+      window.location.href = "/";
+      window.localStorage.removeItem("token");
     }
-    }
-})
-
+  }
+});
 
 // Get all the elements from the signup form
 const signupForm = document.getElementById("signupForm");
@@ -48,7 +46,7 @@ closeModal.addEventListener("click", close);
 // functions to validate username, email and password
 const validateUsername = (username) => {
   // Regex to check if username is valid
-  const regex = /^[a-zA-Z0-9]{5,12}$/;
+  const regex = /^[a-zA-Z0-9_-]{5,12}$/;
   return regex.test(username);
 };
 
@@ -100,7 +98,6 @@ signupForm.addEventListener("submit", async (e) => {
 
   // If form is valid, submit form and send data to beckend server
   if (formIsValid) {
-    console.log(username, email, password);
     try {
       const response = await fetch("http://localhost:3000/signup", {
         method: "POST",
@@ -109,15 +106,15 @@ signupForm.addEventListener("submit", async (e) => {
         },
         body: JSON.stringify({ username, email, password }),
       });
+      const { message } = await response.json();
 
       if (response.ok) {
-        console.log("Signup successful");
-        // Optionally, redirect the user to a success page or perform other actions
+        open(message + " Redirecting to login page...");
+        // redirect to login page
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 3000);
       } else {
-        // throw new Error("Network response was not ok");
-        // Handle signup failure (show error message, etc.)
-        // Get error message from response body and then throw error
-        const { message } = await response.json();
         throw new Error(message);
       }
     } catch (error) {

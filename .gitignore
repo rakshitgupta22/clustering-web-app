@@ -1,0 +1,7 @@
+data/
+node_modules/
+accidents.csv
+data.txt
+test_data.txt
+*.joblib
+```

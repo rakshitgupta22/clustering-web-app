@@ -8,21 +8,32 @@ const loginError = document.getElementById("loginError");
 
 window.addEventListener("DOMContentLoaded", async () => {
   const token = window.localStorage.getItem("token");
-  console.log("helllooooo")
-  console.log(token)
   if (token) {
     const sessionResponse = await fetch(`/session/${token}`);
     if (sessionResponse.ok) {
-        const { username } = await sessionResponse.json();
-        // document.getElementById("username").innerHTML = username;
-        window.location.href = "/dashboard";
+      const { username } = await sessionResponse.json();
+      // document.getElementById("username").innerHTML = username;
+      window.location.href = "/dashboard";
     } else {
-        console.log("Session expired");
-        window.location.href = "/";
-        window.localStorage.removeItem("token");
+      console.log("Session expired");
+      window.location.href = "/";
+      window.localStorage.removeItem("token");
+      // delete token from the server
+      const response = await fetch("/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+      const { message } = await response.json();
+
+      if (response.ok) {
+        console.log(message);
+      } else {
+        console.error("Error:", message);
+      }
     }
-    }
-})
+  }
+});
 
 // Add event listener to the login form
 loginForm.addEventListener("submit", async (e) => {
