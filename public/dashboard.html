@@ -4,8 +4,97 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>K-Means Clustering</title>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <h3>Coming soon...</h3>
+    <!-- Header -->
+    <header>
+      <h1>K-Means Clustering</h1>
+      <!-- Add any header content or navigation links here -->
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <h2 class="header">Dashboard</h2>
+      <p class="data-format">
+        Data Format: The train and test data should be a tab separated txt file
+        containing 2 numeric values on each line. The first value is the x
+        coordinate and the second value is the y coordinate.
+      </p>
+      <!-- Training Section -->
+      <section class="training-section">
+        <h2>Training Section</h2>
+        <form id="trainingForm" enctype="multipart/form-data">
+          <!-- Allow user to either upload the data or input via text box -->
+          <div>
+            <label for="modelData">Upload Training Data (txt file):</label>
+            <input
+              type="file"
+              id="modelData"
+              name="modelData"
+              accept=".txt"
+            /><br />
+            <label for="modelDataText">Or enter data:</label>
+            <textarea
+              id="textDataTrain"
+              name="modelDataText"
+              rows="4"
+              cols="50"
+            ></textarea>
+          </div>
+          <div>
+            <label for="kValue">K Value:</label>
+            <input type="number" id="kValue" name="kValue" />
+          </div>
+          <div>
+            <label for="modelName">Model Name:</label>
+            <input type="text" id="modelName" name="modelName" />
+          </div>
+          <button type="button" class="train-button">Train</button>
+        </form>
+        <span id="trainingError" class="error"></span>
+        <div id="training-display-graph"></div>
+        <!-- Placeholder for displaying the graph -->
+      </section>
+
+      <!-- Testing Section -->
+      <section class="testing-section">
+        <h2>Testing Section</h2>
+        <form id="testingForm" enctype="multipart/form-data">
+          <div>
+            <label for="testData">Upload Test Data (txt file or text):</label>
+            <input
+              type="file"
+              id="testData"
+              name="testData"
+              accept=".txt"
+            /><br />
+            <label for="TestDataText">Or enter data:</label>
+            <textarea
+              id="textDataTest"
+              name="TestDataText"
+              rows="4"
+              cols="50"
+            ></textarea>
+          </div>
+          <div>
+            <label for="modelSelect">Select a Model:</label>
+            <select id="modelSelect" name="modelSelect">
+              <option value="select">Select</option>
+            </select>
+          </div>
+          <button type="button" class="test-button">Test</button>
+        </form>
+        <!-- Placeholder for displaying the graph and error-->
+        <span id="testingError" class="error"></span>
+        <div id="testing-display-graph"></div>
+      </section>
+
+      <!-- Logout Button -->
+      <button type="button" class="logout-btn">Logout</button>
+    </main>
+
+    <script src="js/dashboard.js"></script>
+    <!-- Include your JavaScript file -->
   </body>
 </html>
